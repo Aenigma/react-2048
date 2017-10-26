@@ -6,11 +6,15 @@
 
 .Game-item {
   background-color: beige;
-  border: black;
-  border-style: solid;
+  margin: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.Game:focus {
+  outline-style: none;
+  box-shadow: 5px 5px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .Game-numeral {
