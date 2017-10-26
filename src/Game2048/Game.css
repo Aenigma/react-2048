@@ -1,0 +1,17 @@
+.Game {
+  display: grid;
+  grid-template-columns: repeat(4, 100px);
+  grid-template-rows: repeat(4, 100px);
+}
+
+.Game-item {
+  background-color: beige;
+  border: black;
+  border-style: solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Game-numeral {
+}
