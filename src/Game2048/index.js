@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import uuid from 'uuid/v4';
 //import PropTypes from 'prop-types';
 import './Game.css'
 
@@ -13,13 +14,18 @@ class Game extends Component {
   }
 
   genItem(item) {
-    let inner = (<div className="Game-numeral"/>);
-    let key = Math.random() * 1000000000;
+    let inner;
+    let key;
+
     if (item.num) {
+      key = item.id;
       inner = (
         <div className="Game-numeral">
           {item.num}
         </div>);
+    } else {
+      inner = (<div className="Game-numeral"/>);
+      key = uuid();
     }
 
     return (
@@ -57,15 +63,13 @@ class Game extends Component {
     const isOver = flattened.every(e => e.num);
 
     if(!isOver) {
-      const copyArr = this.state.board.map(arr => arr.slice());
+      const newBoard = this.state.board.map(arr => arr.slice());
       const filtered = flattened.filter(e => !e.num);
       const emptyCell = filtered[Math.floor(Math.random() * filtered.length)];
 
-      copyArr[emptyCell.row][emptyCell.col] = {id: "adsad", num: 2};
-      this.setState({board: copyArr});
+      newBoard[emptyCell.row][emptyCell.col] = {id: uuid(), num: 2};
+      this.setState({board: newBoard});
     }
-
-    console.log("TICK!");
   }
 
   render() {
