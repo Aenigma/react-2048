@@ -8,15 +8,17 @@ class Game extends Component {
     this.state = {
       board: Array(4).fill(Array(4).fill(null))
     };
+
+    this.tick = this.tick.bind(this);
   }
 
   genItem(item) {
     let inner = (<div className="Game-numeral"/>);
     let key = Math.random() * 1000000000;
-    if (item) {
+    if (item.num) {
       inner = (
         <div className="Game-numeral">
-          item.num
+          {item.num}
         </div>);
     }
 
@@ -29,8 +31,16 @@ class Game extends Component {
   }
 
   flattened() {
-    this.state.board.map()
-    return [].concat.apply([], this.state.board);
+    const copiedBoard = this.state.board.map((row, i) => {
+      return row.map((col, j) => {
+        let ncol = Object.assign({
+          row: i,
+          col: j
+        }, col);
+        return ncol;
+      });
+    });
+    return [].concat.apply([], copiedBoard);
   }
 
   genTable() {
@@ -44,10 +54,15 @@ class Game extends Component {
   tick() {
     const flattened = this.flattened();
     // is every element non-null?
-    const isOver = flattened.every(e => e);
+    const isOver = flattened.every(e => e.num);
 
     if(!isOver) {
+      const copyArr = this.state.board.map(arr => arr.slice());
+      const filtered = flattened.filter(e => !e.num);
+      const emptyCell = filtered[Math.floor(Math.random() * filtered.length)];
 
+      copyArr[emptyCell.row][emptyCell.col] = {id: "adsad", num: 2};
+      this.setState({board: copyArr});
     }
 
     console.log("TICK!");
