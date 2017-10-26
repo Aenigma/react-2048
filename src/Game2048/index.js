@@ -30,9 +30,7 @@ class Game extends Component {
 
     return (
       <div className="Game-item" key={key}>
-        <div className="Game-numeral">
-          {inner}
-        </div>
+        {inner}
       </div>);
   }
 
