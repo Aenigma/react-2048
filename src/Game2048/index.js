@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import FlipMove from 'react-flip-move';
+import {isEqual} from 'lodash';
 import uuid from 'uuid/v4';
 //import PropTypes from 'prop-types';
 import './Game.css';
@@ -107,7 +108,7 @@ class Game extends Component {
     newBoard = moveGridLeft(newBoard);
     newBoard = pipe(...preprocessors.reverse())(newBoard);
 
-    if(newBoard === this.state.board) {
+    if(isEqual(newBoard, this.state.board)) {
       console.log('invalid move; no change');
       return;
     }

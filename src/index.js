@@ -7,8 +7,7 @@ import Game from './Game2048';
 
 ReactDOM.render((
   <div>
-    <App heading="foo">
-    Test foo bar baz
+    <App heading="2048">
     </App>
     <div className="center">
       <Game visible={false} tabIndex={null}/>
