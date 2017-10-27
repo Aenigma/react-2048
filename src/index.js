@@ -11,6 +11,7 @@ ReactDOM.render((
     Test foo bar baz
     </App>
     <div className="center">
+      <Game visible={false} tabIndex={null}/>
       <Game />
     </div>
   </div>

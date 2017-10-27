@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import FlipMove from 'react-flip-move';
 import uuid from 'uuid/v4';
 //import PropTypes from 'prop-types';
 import './Game.css';
-import {moveGridLeft, GameTile} from './gamelogic.js';
+import {moveGridLeft, GameTile, flip, transpose, pipe} from './gamelogic.js';
 
 const cloneTable = table => table.map(row => row.slice());
 
@@ -22,7 +23,11 @@ function annotateFlatten(table) {
 
 class Game extends Component {
   componentDidMount() {
+    if(!this.props.visible) {
+      return;
+    }
     ReactDOM.findDOMNode(this).children[0].focus(); // hack
+    this.addRandom();
   }
 
   constructor(props) {
@@ -57,53 +62,79 @@ class Game extends Component {
 
   genTable() {
     return (
-      <div className="Game" onKeyDown={this.tick} tabIndex="0">
-        {annotateFlatten(this.state.board).map(this.genItem)}
-      </div>
+      <FlipMove className="Game"
+        onKeyDown={this.tick} tabIndex={this.props.tabIndex}
+        duration={100} easing="linear" enterAnimation="none" leaveAnimation="none">
+          {annotateFlatten(this.state.board).map(this.genItem)}
+      </FlipMove>
     );
   }
 
+  addRandom() {
+    const newBoard = cloneTable(this.state.board);
+    const flattened = annotateFlatten(newBoard);
+    const filtered = flattened.filter(e => !e.num);
+    const emptyCell = filtered[Math.floor(Math.random() * filtered.length)];
+
+    newBoard[emptyCell.row][emptyCell.col] = new GameTile(2);
+    this.setState({board: newBoard});
+  }
+
   tick(ev) {
-    let dy = 0;
-    let dx = 0;
+    let preprocessors /*:Array<(Array<Array<?GameTile>>) => Array<Array<?GameTile>>>*/ = [];
     let newBoard = cloneTable(this.state.board);
 
     switch(ev.key) {
       case 'ArrowUp':
+        preprocessors = [transpose];
+        break;
       case 'ArrowDown':
-        dy = ev.key === 'ArrowUp' ? 1 : -1;
+        //dy = ev.key === 'ArrowUp' ? 1 : -1;
+        preprocessors = [flip, transpose];
         break;
       case 'ArrowLeft':
-        newBoard = moveGridLeft(this.state.board);
+        preprocessors = [];
         break;
       case 'ArrowRight':
-        console.log(newBoard);
-        dx = ev.key === 'ArrowRight' ? 1 : -1;
+        preprocessors = [flip];
+        //dx = ev.key === 'ArrowRight' ? 1 : -1;
         break;
       default:
         return;
     }
 
-    console.log(`${dx}:${dy}`);
-    const flattened = annotateFlatten(this.state.board);
-    // is every element non-null?
-    const isOver = flattened.every(e => e.num);
+    newBoard = pipe(...preprocessors)(newBoard);
+    newBoard = moveGridLeft(newBoard);
+    newBoard = pipe(...preprocessors.reverse())(newBoard);
 
-    if (!isOver) {
-      const filtered = flattened.filter(e => !e.num);
-      const emptyCell = filtered[Math.floor(Math.random() * filtered.length)];
-
-      newBoard[emptyCell.row][emptyCell.col] = new GameTile(2);
+    if(newBoard === this.state.board) {
+      console.log('invalid move; no change');
+      return;
     }
-    this.setState({board: newBoard});
+
+    this.setState({board: newBoard}, () => {
+      const flattened = annotateFlatten(newBoard);
+      // is every element non-null?
+      const isOver = flattened.every(e => e.num);
+
+      if (!isOver) { // check if it was a valid move, first
+        this.addRandom();
+      }
+    });
   }
 
   render() {
     return (
-      <div>
+      <div className={!this.props.visible ? 'Game-overlay' : ''}
+        style={this.props.visible ? {} : { position: "absolute"}}>
         {this.genTable()}
       </div>);
   }
 }
+
+Game.defaultProps = {
+  tabIndex: "0",
+  visible: true,
+};
 
 export default Game;
