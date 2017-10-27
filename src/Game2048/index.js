@@ -72,12 +72,14 @@ class Game extends Component {
   }
 
   addRandom() {
+    const possibleValues = [2, 4];
     const newBoard = cloneTable(this.state.board);
     const flattened = annotateFlatten(newBoard);
     const filtered = flattened.filter(e => !e.num);
     const emptyCell = filtered[Math.floor(Math.random() * filtered.length)];
 
-    newBoard[emptyCell.row][emptyCell.col] = new GameTile(2);
+    const digit = possibleValues[Math.floor(Math.random() * possibleValues.length)];
+    newBoard[emptyCell.row][emptyCell.col] = new GameTile(digit);
     this.setState({board: newBoard});
   }
 
