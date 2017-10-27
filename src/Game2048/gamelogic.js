@@ -36,25 +36,6 @@ export const flip = (table/*: Array<Array<any>>*/) =>
 
 export const pipe = (...funcs /*: Array<(any) => any> */) =>
   funcs.reduce((a,b) => (i) => a(b(i)), (i) => i);
-//export const pipe = [(i) => i+1, (i) => i+2, (i) => i+3].reduce((a,b) => (i) => a(b(i)))
-window.pipe = pipe;
-
-window.flip = flip;
-window.transpose = transpose;
-
-/*
-const example = [
-  [1,1,1,1],
-  [2,0,2,4],
-  [2,1,1,0],
-  [0,0,0,0]
-];
-
-const sample: Array<Array<?GameTile>> = example.map(r => r.map(i => { return i ? new GameTile(i) : null; }));
-window.sample = sample;
-window.moveGridLeft = moveGridLeft;
-window.moveRowLeft = moveRowLeft;
-*/
 
 export function moveGridLeft(table/*: Array<Array<?GameTile>>*/) {
   return table.map(moveRowLeft);

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import FlipMove from 'react-flip-move';
-import { Swipeable } from 'react-touch';
-import { isEqual } from 'lodash';
+import { Swipeable, defineSwipe } from 'react-touch';
+import { isEqual, debounce } from 'lodash';
 import uuid from 'uuid/v4';
 //import PropTypes from 'prop-types';
 import './Game.css';
@@ -30,38 +30,49 @@ const preprocMap = {
   right: [flip]
 };
 
+const swipe = defineSwipe({swipeDistance: 30});
+
+const colors = ['#FF', '#AA9988', '#A86D00', '#228899', '#3F757F', '#775555',
+'#885511', '#664400', '#4C473D', '#664200', '#882211', '#114488', '#2B2B2B',
+'#332100', '#101111', '#001122'];
+
 class Game extends Component {
   componentDidMount() {
     if(!this.props.visible) {
       return;
     }
     ReactDOM.findDOMNode(this).children[0].focus(); // hack
+    this.isAnimating = false;
     this.addRandom();
   }
 
   constructor(props) {
     super(props);
+    const move = this.move.bind(this);
     this.state = {
       board: Array(4).fill(Array(4).fill(null))
     };
-
+    this.move = debounce(move, 100);
     this.handleKey = this.handleKey.bind(this);
   }
 
   genItem(item) {
     let inner;
     let key;
+    let color = null;
 
     if (item.num) {
       key = item.id;
       inner = item.num;
+      color = colors[Math.floor(Math.log2(inner))];
     } else {
       key = uuid();
       inner = null;
     }
 
     return (
-      <div className="Game-item" key={key} data-game-numeral={inner}>
+      <div className="Game-item" key={key}
+        data-game-numeral={inner} style={{backgroundColor: color}}>
         {inner}
       </div>);
   }
@@ -131,7 +142,7 @@ class Game extends Component {
         <div style={this.props.visible ? {} : { visibility: 'hidden'}}>
           Score: {annotateFlatten(this.state.board).reduce((a, b) => a + (b.num || 0), 0)}
         </div>
-        <Swipeable
+        <Swipeable config={swipe}
           onSwipeLeft={() => this.move(preprocMap.left)}
           onSwipeRight={() => this.move(preprocMap.right)}
           onSwipeDown={() => this.move(preprocMap.down)}

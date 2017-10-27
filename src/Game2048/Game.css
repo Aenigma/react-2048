@@ -20,7 +20,7 @@
 }
 
 .Game-item:not(:empty) {
-  background-color: #e6bf84;
+  background-color: #E59500;
 }
 
 .Game-overlay > .Game > .Game-item {
