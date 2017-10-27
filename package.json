@@ -2,6 +2,7 @@
   "name": "react2048",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://aenigma.github.io/react-2048/",
   "dependencies": {
     "flow-bin": "^0.57.3",
     "lodash.isequal": "^4.5.0",
@@ -16,6 +17,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "flow": "flow"
+    "flow": "flow",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   }
 }
