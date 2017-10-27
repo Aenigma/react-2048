@@ -9,15 +9,22 @@
   z-index: -1;
 }
 
-.Game-overlay > .Game > .Game-item {
-  background-color: beige;
-}
-
 .Game-item {
   margin: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 5px;
+  font-size: 2em;
+  color: white;
+}
+
+.Game-item:not(:empty) {
+  background-color: #e6bf84;
+}
+
+.Game-overlay > .Game > .Game-item {
+  background-color: beige;
 }
 
 .Game:focus {

@@ -10,6 +10,7 @@
     "react-dom": "^16.0.0",
     "react-flip-move": "^2.9.17",
     "react-scripts": "1.0.14",
+    "react-touch": "^0.4.3",
     "uuid": "^3.1.0"
   },
   "scripts": {

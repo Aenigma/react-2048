@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import FlipMove from 'react-flip-move';
-import {isEqual} from 'lodash';
+import { Swipeable } from 'react-touch';
+import { isEqual } from 'lodash';
 import uuid from 'uuid/v4';
 //import PropTypes from 'prop-types';
 import './Game.css';
@@ -22,6 +23,13 @@ function annotateFlatten(table) {
   return [].concat.apply([], copiedBoard);
 }
 
+const preprocMap = {
+  up: [transpose],
+  down: [flip, transpose],
+  left: [],
+  right: [flip]
+};
+
 class Game extends Component {
   componentDidMount() {
     if(!this.props.visible) {
@@ -37,7 +45,7 @@ class Game extends Component {
       board: Array(4).fill(Array(4).fill(null))
     };
 
-    this.tick = this.tick.bind(this);
+    this.handleKey = this.handleKey.bind(this);
   }
 
   genItem(item) {
@@ -46,17 +54,14 @@ class Game extends Component {
 
     if (item.num) {
       key = item.id;
-      inner = (
-        <div className="Game-numeral">
-          {item.num}
-        </div>);
+      inner = item.num;
     } else {
-      inner = (<div className="Game-numeral"/>);
       key = uuid();
+      inner = null;
     }
 
     return (
-      <div className="Game-item" key={key}>
+      <div className="Game-item" key={key} data-game-numeral={inner}>
         {inner}
       </div>);
   }
@@ -64,7 +69,7 @@ class Game extends Component {
   genTable() {
     return (
       <FlipMove className="Game"
-        onKeyDown={this.tick} tabIndex={this.props.tabIndex}
+        onKeyDown={this.handleKey} tabIndex={this.props.tabIndex}
         duration={100} easing="linear" enterAnimation="none" leaveAnimation="none">
           {annotateFlatten(this.state.board).map(this.genItem)}
       </FlipMove>
@@ -83,40 +88,20 @@ class Game extends Component {
     this.setState({board: newBoard});
   }
 
-  tick(ev) {
-    let preprocessors /*:Array<(Array<Array<?GameTile>>) => Array<Array<?GameTile>>>*/ = [];
-    let newBoard = cloneTable(this.state.board);
+  move(preprocessors) {
+    const procs = preprocessors.slice();
+    let board = cloneTable(this.state.board);
+    board = pipe(...procs)(board);
+    board = moveGridLeft(board);
+    board = pipe(...procs.reverse())(board);
 
-    switch(ev.key) {
-      case 'ArrowUp':
-        preprocessors = [transpose];
-        break;
-      case 'ArrowDown':
-        //dy = ev.key === 'ArrowUp' ? 1 : -1;
-        preprocessors = [flip, transpose];
-        break;
-      case 'ArrowLeft':
-        preprocessors = [];
-        break;
-      case 'ArrowRight':
-        preprocessors = [flip];
-        //dx = ev.key === 'ArrowRight' ? 1 : -1;
-        break;
-      default:
-        return;
-    }
-
-    newBoard = pipe(...preprocessors)(newBoard);
-    newBoard = moveGridLeft(newBoard);
-    newBoard = pipe(...preprocessors.reverse())(newBoard);
-
-    if(isEqual(newBoard, this.state.board)) {
+    if(isEqual(board, this.state.board)) {
       console.log('invalid move; no change');
       return;
     }
 
-    this.setState({board: newBoard}, () => {
-      const flattened = annotateFlatten(newBoard);
+    this.setState({board: board}, () => {
+      const flattened = annotateFlatten(board);
       // is every element non-null?
       const isOver = flattened.every(e => e.num);
 
@@ -126,11 +111,33 @@ class Game extends Component {
     });
   }
 
+  handleKey(ev) {
+    const keyMap = {
+      'ArrowUp': 'up',
+      'ArrowDown': 'down',
+      'ArrowLeft': 'left',
+      'ArrowRight': 'right'
+    }
+
+    if (ev.key && keyMap[ev.key] && preprocMap[keyMap[ev.key]]) {
+      this.move(preprocMap[keyMap[ev.key]]);
+    }
+  }
+
   render() {
     return (
       <div className={!this.props.visible ? 'Game-overlay' : ''}
         style={this.props.visible ? {} : { position: "absolute"}}>
-        {this.genTable()}
+        <div style={this.props.visible ? {} : { visibility: 'hidden'}}>
+          Score: {annotateFlatten(this.state.board).reduce((a, b) => a + (b.num || 0), 0)}
+        </div>
+        <Swipeable
+          onSwipeLeft={() => this.move(preprocMap.left)}
+          onSwipeRight={() => this.move(preprocMap.right)}
+          onSwipeDown={() => this.move(preprocMap.down)}
+          onSwipeUp={() => this.move(preprocMap.up)}>
+          {this.genTable()}
+        </Swipeable>
       </div>);
   }
 }
