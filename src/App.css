@@ -11,6 +11,7 @@
   background-color: #222;
   color: white;
   border-radius: 0 0 5px 5px;
+  display: block;
 }
 
 .App-title {
@@ -24,4 +25,10 @@
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+@media (max-height: 564px) {
+    .App-header {
+      display: none;
+    }
 }
