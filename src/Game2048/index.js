@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import FlipMove from 'react-flip-move';
+import Gamepad from 'react-gamepad'
 import { Swipeable, defineSwipe } from 'react-touch';
 import { isEqual, debounce } from 'lodash';
 import uuid from 'uuid/v4';
@@ -147,7 +148,13 @@ class Game extends Component {
           onSwipeRight={() => this.move(preprocMap.right)}
           onSwipeDown={() => this.move(preprocMap.down)}
           onSwipeUp={() => this.move(preprocMap.up)}>
-          {this.genTable()}
+          <Gamepad
+            onLeft={() => this.move(preprocMap.left)}
+            onRight={() => this.move(preprocMap.right)}
+            onDown={() => this.move(preprocMap.down)}
+            onUp={() => this.move(preprocMap.up)}>
+            {this.genTable()}
+          </Gamepad>
         </Swipeable>
       </div>);
   }
