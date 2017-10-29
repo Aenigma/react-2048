@@ -4,6 +4,7 @@ import FlipMove from 'react-flip-move';
 import Gamepad from 'react-gamepad'
 import { Swipeable, defineSwipe } from 'react-touch';
 import { isEqual, debounce } from 'lodash';
+import { Random } from 'lcg';
 import uuid from 'uuid/v4';
 //import PropTypes from 'prop-types';
 import './Game.css';
@@ -33,6 +34,9 @@ const preprocMap = {
 
 const swipe = defineSwipe({swipeDistance: 30});
 
+// possible values to generate on the grid
+const newGridValues = [2, 4];
+
 const colors = ['#FF', '#AA9988', '#A86D00', '#228899', '#3F757F', '#775555',
 '#885511', '#664400', '#4C473D', '#664200', '#882211', '#114488', '#2B2B2B',
 '#332100', '#101111', '#001122'];
@@ -44,15 +48,18 @@ class Game extends Component {
     }
     ReactDOM.findDOMNode(this).children[0].focus(); // hack
     this.isAnimating = false;
+    console.log("did mount!");
     this.addRandom();
   }
 
   constructor(props) {
     super(props);
+    console.log("constructing!");
     const move = this.move.bind(this);
     this.state = {
       board: Array(4).fill(Array(4).fill(null))
     };
+    this.rand = new Random(Math.random());
     this.move = debounce(move, 100);
     this.handleKey = this.handleKey.bind(this);
   }
@@ -89,13 +96,16 @@ class Game extends Component {
   }
 
   addRandom() {
-    const possibleValues = [2, 4];
     const newBoard = cloneTable(this.state.board);
     const flattened = annotateFlatten(newBoard);
     const filtered = flattened.filter(e => !e.num);
-    const emptyCell = filtered[Math.floor(Math.random() * filtered.length)];
 
-    const digit = possibleValues[Math.floor(Math.random() * possibleValues.length)];
+    const emptyCellIndex = this.rand.getIntegerBetween(0, filtered.length - 1);
+    const digitIndex = this.rand.getIntegerBetween(0, newGridValues.length - 1);
+    this.rand = this.rand.next();
+
+    const emptyCell = filtered[emptyCellIndex];
+    const digit = newGridValues[digitIndex];
     newBoard[emptyCell.row][emptyCell.col] = new GameTile(digit);
     this.setState({board: newBoard});
   }
