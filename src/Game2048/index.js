@@ -143,19 +143,19 @@ class Game extends Component {
         <div style={this.props.visible ? {} : { visibility: 'hidden'}}>
           Score: {annotateFlatten(this.state.board).reduce((a, b) => a + (b.num || 0), 0)}
         </div>
-        <Swipeable config={swipe}
-          onSwipeLeft={() => this.move(preprocMap.left)}
-          onSwipeRight={() => this.move(preprocMap.right)}
-          onSwipeDown={() => this.move(preprocMap.down)}
-          onSwipeUp={() => this.move(preprocMap.up)}>
-          <Gamepad
-            onLeft={() => this.move(preprocMap.left)}
-            onRight={() => this.move(preprocMap.right)}
-            onDown={() => this.move(preprocMap.down)}
-            onUp={() => this.move(preprocMap.up)}>
-            {this.genTable()}
+        <Gamepad
+          onLeft={() => this.move(preprocMap.left)}
+          onRight={() => this.move(preprocMap.right)}
+          onDown={() => this.move(preprocMap.down)}
+          onUp={() => this.move(preprocMap.up)}>
+            <Swipeable config={swipe}
+              onSwipeLeft={() => this.move(preprocMap.left)}
+              onSwipeRight={() => this.move(preprocMap.right)}
+              onSwipeDown={() => this.move(preprocMap.down)}
+              onSwipeUp={() => this.move(preprocMap.up)}>
+              {this.genTable()}
+            </Swipeable>
           </Gamepad>
-        </Swipeable>
       </div>);
   }
 }
