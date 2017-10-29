@@ -11,8 +11,10 @@
     "react-dom": "^16.0.0",
     "react-flip-move": "^2.9.17",
     "react-gamepad": "^1.0.3",
+    "react-redux": "^5.0.6",
     "react-scripts": "1.0.14",
     "react-touch": "^0.4.3",
+    "redux": "^3.7.2",
     "uuid": "^3.1.0"
   },
   "scripts": {
@@ -25,6 +27,7 @@
     "deploy": "gh-pages -d build"
   },
   "devDependencies": {
-    "gh-pages": "^1.0.0"
+    "gh-pages": "^1.0.0",
+    "redux-devtools": "^3.4.0"
   }
 }
