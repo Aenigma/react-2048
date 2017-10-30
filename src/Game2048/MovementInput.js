@@ -9,7 +9,7 @@ const keyMove = (key, move) => {
     'ArrowDown': moveDown,
     'ArrowLeft': moveLeft,
     'ArrowRight': moveRight
-  }
+  };
 
   if (!key || !keyMap[key] || !keyMap[key]) {
       return;
