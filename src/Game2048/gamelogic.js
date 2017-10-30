@@ -1,11 +1,12 @@
 // @flow
 import uuid from 'uuid/v4';
-export const cloneTable = table => table.map(row => row.slice());
+
+export const cloneTable = (table/*:Array<Array<any>>*/) => table.map(row => row.slice());
 
 // flatten and annotate
-export function annotateFlatten(table) {
+export function annotateFlatten(table/*:Array<Array<?GameTile>>*/) {
   const copiedBoard = table.map((row, i) => row.map((col, j) => {
-      let ncol = Object.assign({
+      let ncol = Object.assign({}, {
         row: i,
         col: j
       }, col);
@@ -61,7 +62,7 @@ function shiftLeft(row) {
 function reduceLeft(row, offset) {
   for(let i = offset; i < row.length - 1; i++) {
     if (row[i] && row[i].canReduce(row[i + 1])) {
-      const old = row[i + 1];
+      const old = row[i + 1] || { id: "0", num: 0 };
       row[i] = new GameTile(old.num * 2, old.id);
       row[i + 1] = null;
     }
