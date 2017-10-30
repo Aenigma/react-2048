@@ -1,5 +1,19 @@
 // @flow
 import uuid from 'uuid/v4';
+export const cloneTable = table => table.map(row => row.slice());
+
+// flatten and annotate
+export function annotateFlatten(table) {
+  const copiedBoard = table.map((row, i) => row.map((col, j) => {
+      let ncol = Object.assign({
+        row: i,
+        col: j
+      }, col);
+      return ncol;
+    })
+  );
+  return [].concat.apply([], copiedBoard);
+}
 
 export class GameTile {
   /*::
@@ -27,15 +41,6 @@ export class GameTile {
 export function displayTiles(grid/*: Array<Array<?GameTile>>*/)/*: Array<Array<number>>*/{
   return grid.map(row => row.map(e => e ? e.num : 0));
 }
-
-export const transpose = (table/*: Array<Array<any>>*/) =>
-  table.map((row, i) => table.map(col => col[i]));
-
-export const flip = (table/*: Array<Array<any>>*/) =>
-  table.map((row) => row.slice().reverse());
-
-export const pipe = (...funcs /*: Array<(any) => any> */) =>
-  funcs.reduce((a,b) => (i) => a(b(i)), (i) => i);
 
 export function moveGridLeft(table/*: Array<Array<?GameTile>>*/) {
   return table.map(moveRowLeft);
