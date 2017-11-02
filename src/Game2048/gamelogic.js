@@ -1,21 +1,6 @@
 // @flow
 import uuid from 'uuid/v4';
 
-export const cloneTable = (table/*:Array<Array<any>>*/) => table.map(row => row.slice());
-
-// flatten and annotate
-export function annotateFlatten(table/*:Array<Array<?GameTile>>*/) {
-  const copiedBoard = table.map((row, i) => row.map((col, j) => {
-      let ncol = Object.assign({}, {
-        row: i,
-        col: j
-      }, col);
-      return ncol;
-    })
-  );
-  return [].concat.apply([], copiedBoard);
-}
-
 export class GameTile {
   /*::
    id: string;
@@ -39,11 +24,32 @@ export class GameTile {
   }
 }
 
-export function displayTiles(grid/*: Array<Array<?GameTile>>*/)/*: Array<Array<number>>*/{
+/*::
+export type Board<T> = Array<Array<?T>>;
+export type Board2048 = Board<?GameTile>;
+*/
+
+
+export const cloneTable = /*:: <T>*/(table/*: Board<T>*/) /*:Board<T>*/ => table.map(row => row.slice());
+
+// flatten and annotate
+export function annotateFlatten(table/*:Array<Array<?GameTile>>*/) {
+  const copiedBoard = table.map((row, i) => row.map((col, j) => {
+      let ncol = Object.assign({}, {
+        row: i,
+        col: j
+      }, col);
+      return ncol;
+    })
+  );
+  return [].concat.apply([], copiedBoard);
+}
+
+export function displayTiles(grid/*: Board2048*/)/*: Board<number>*/{
   return grid.map(row => row.map(e => e ? e.num : 0));
 }
 
-export function moveGridLeft(table/*: Array<Array<?GameTile>>*/) {
+export function moveGridLeft(table: Array<Array<any>>) {
   return table.map(moveRowLeft);
 }
 

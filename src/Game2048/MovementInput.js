@@ -37,10 +37,13 @@ const MovementInput = ({move, children}) => {
         onSwipeLeft={() => moveLeft(move)}
         onSwipeRight={() => moveRight(move)}
         onSwipeDown={() => moveDown(move)}
-        onSwipeUp={() => moveUp(move)}>
+        onSwipeUp={() => moveUp(move)}
+        __passThrough={{potato: "YES!"}}>
+        <Swipeable config={swipe}>
         <ArrowKeysMovement move={move}>
           {children}
         </ArrowKeysMovement>
+      </Swipeable>
       </Swipeable>
     </Gamepad>);
 };
