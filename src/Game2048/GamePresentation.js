@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import FlipMove from 'react-flip-move';
 import { annotateFlatten } from './gamelogic';
 
@@ -28,12 +29,23 @@ const genItem = (item) => {
     </div>);
 };
 
-const GamePresentation = ({board, tabIndex, ...other}) => {
-  return (
-    <FlipMove {...other} className="Game" tabIndex={tabIndex}
-      duration={100} easing="linear" enterAnimation="none" leaveAnimation="none">
-      {annotateFlatten(board).map(genItem)}
-    </FlipMove>);
-};
+class GamePresentation extends Component {
+
+  componentDidMount() {
+    if(this.props.shouldAutoFocus) {
+      ReactDOM.findDOMNode(this).focus();
+    }
+  }
+
+  render() {
+    const {board, tabIndex, shouldAutoFocus, ...other} = this.props;
+
+    return (
+      <FlipMove {...other} className="Game" tabIndex={tabIndex}
+        duration={100} easing="linear" enterAnimation="none" leaveAnimation="none">
+        {annotateFlatten(board).map(genItem)}
+      </FlipMove>);
+  }
+}
 
 export default GamePresentation;

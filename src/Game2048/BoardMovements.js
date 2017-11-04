@@ -1,7 +1,7 @@
 //@flow
 import { moveGridLeft, cloneTable } from './gamelogic.js';
 
-import type { Board, GameTile } from './gamelogic';
+import type { Board } from './gamelogic';
 opaque type BoardProcessor<T> = (Board<?T>) => Board<?T>;
 opaque type ProcList<T> = Array<BoardProcessor<T>>;
 
@@ -38,7 +38,7 @@ export const move = <T>(current: Board<?T>, preprocessors :ProcList<?T>) => {
   board = pipe(...procs)(board);
   board = moveGridLeft(board);
 
-  board = pipe(...(preprocessors.reverse(): ProcList<?T>))(board);
+  board = pipe(...(procs.reverse(): ProcList<?T>))(board);
 
   return board;
 };

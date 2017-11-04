@@ -15,6 +15,7 @@
     "react-scripts": "1.0.14",
     "react-touch": "^0.4.3",
     "redux": "^3.7.2",
+    "redux-undo": "^1.0.0-beta9-9-6",
     "uuid": "^3.1.0"
   },
   "scripts": {

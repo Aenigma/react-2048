@@ -1,51 +1,44 @@
 import React from 'react';
 import { Swipeable, defineSwipe } from 'react-touch';
 import Gamepad from 'react-gamepad';
-import { moveLeft, moveRight, moveDown, moveUp } from './BoardMovements';
 
+const swipe = defineSwipe({swipeDistance: 30});
 const keyMove = (key, move) => {
   const keyMap = {
-    'ArrowUp': moveUp,
-    'ArrowDown': moveDown,
-    'ArrowLeft': moveLeft,
-    'ArrowRight': moveRight
+    'ArrowUp': 'UP',
+    'ArrowDown': 'DOWN',
+    'ArrowLeft': 'LEFT',
+    'ArrowRight': 'RIGHT'
   };
 
   if (!key || !keyMap[key] || !keyMap[key]) {
       return;
   }
-  keyMap[key](move);
+  move(keyMap[key]);
 };
 
-
-const ArrowKeysMovement = ({move, children, ...passThrough}) => {
+const ArrowKeysMovement = ({children, move, ...passThrough}) => {
   const props = {
     onKeyDown: (ev) => keyMove(ev.key, move)
   };
   return React.cloneElement(React.Children.only(children), {...props, ...passThrough});
 };
 
-const swipe = defineSwipe({swipeDistance: 30});
-const MovementInput = ({move, children}) => {
-  return (
-    <Gamepad
-      onLeft={() => moveLeft(move)}
-      onRight={() => moveRight(move)}
-      onDown={() => moveDown(move)}
-      onUp={() => moveUp(move)}>
-      <Swipeable config={swipe}
-        onSwipeLeft={() => moveLeft(move)}
-        onSwipeRight={() => moveRight(move)}
-        onSwipeDown={() => moveDown(move)}
-        onSwipeUp={() => moveUp(move)}
-        __passThrough={{potato: "YES!"}}>
-        <Swipeable config={swipe}>
-        <ArrowKeysMovement move={move}>
-          {children}
-        </ArrowKeysMovement>
-      </Swipeable>
-      </Swipeable>
-    </Gamepad>);
-};
+const MovementInput = ({children, move}) => (
+  <Gamepad
+    onLeft={() => move('LEFT')}
+    onRight={() => move('RIGHT')}
+    onDown={() => move('DOWN')}
+    onUp={() => move('UP')}>
+    <Swipeable config={swipe}
+      onSwipeLeft={() => move('LEFT')}
+      onSwipeRight={() => move('RIGHT')}
+      onSwipeDown={() => move('DOWN')}
+      onSwipeUp={() => move('UP')}>
+      <ArrowKeysMovement move={move}>
+        {children}
+      </ArrowKeysMovement>
+    </Swipeable>
+  </Gamepad>);
 
 export default MovementInput;
