@@ -6,6 +6,7 @@ import { Provider, connect } from 'react-redux';
 
 import registerServiceWorker from './registerServiceWorker';
 import App from './App';
+import { loadState, saveState } from './Game2048/localstorage';
 
 import Game2048 from './Game2048';
 import { game } from './Game2048/reducers';
@@ -14,9 +15,14 @@ import './index.css';
 
 
 const store = createStore(
-  undoable(game), undefined,
+  undoable(game),
+  loadState(),
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
+
+store.subscribe(() => {
+  saveState(store.getState());
+});
 
 const createNewGame = () => {
   store.dispatch({type: 'NEW_GAME'});
@@ -65,5 +71,5 @@ ReactDOM.render((
     </Provider>
   </div>
 ), document.getElementById('root'));
-createNewGame();
+//createNewGame();
 registerServiceWorker();

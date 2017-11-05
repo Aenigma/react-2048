@@ -61,7 +61,7 @@ const newGame = () => {
   }
 };
 
-const game = (state = initialGameState(), action = {type: ""}) => {
+const game = (state = newGame(), action = {type: ""}) => {
   const direction = action.direction ? action.direction.toLowerCase() : 'LEFT';
   let {seed, board, playstate} = state;
   let rand = new Random(seed);
