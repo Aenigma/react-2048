@@ -13,7 +13,10 @@ import { game } from './Game2048/reducers';
 import './index.css';
 
 
-const store = createStore(undoable(game));
+const store = createStore(
+  undoable(game), undefined,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
 const createNewGame = () => {
   store.dispatch({type: 'NEW_GAME'});
@@ -42,14 +45,14 @@ const mapStateToProps = (state) => {
 };
 const GameRedux = connect(mapStateToProps, mapDispatchMover)(Game2048);
 
-let GameActions = ({canUndo, canRedo}) => (
+let GameActions = ({canUndo, canRedo, newgame, undo, redo}) => (
   <div className="center">
-    <button onClick={createNewGame}>New Game!</button>
-    <button onClick={() => store.dispatch(ActionCreators.undo())} disabled={!canUndo}>Undo</button>
-    <button onClick={() => store.dispatch(ActionCreators.redo())} disabled={!canRedo}>Redo</button>
+    <button onClick={newgame}>New Game!</button>
+    <button onClick={undo} disabled={!canUndo}>Undo</button>
+    <button onClick={redo} disabled={!canRedo}>Redo</button>
   </div>
 );
-GameActions = connect(mapStateToProps, null)(GameActions);
+GameActions = connect(mapStateToProps, mapDispatchMover)(GameActions);
 
 ReactDOM.render((
   <div>

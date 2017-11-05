@@ -10,19 +10,17 @@ export class GameTile {
     this.id = id;
     this.num = num;
   }
-
-  canReduce(other/*: ?GameTile*/) {
-    if(!other || !other.num) {
-      return false;
-    }
-
-    return this.num === other.num;
-  }
-
-  clone()/*: GameTile*/ {
-    return new GameTile(this.num, this.id);
-  }
 }
+
+export const gameTileFactory = (num) => ({num, id: uuid()});
+
+const canReduce = (one/*: ?GameTile*/, two/*: ?GameTile*/) => {
+  if(!one || !one.num || !two || !two.num) {
+    return false;
+  }
+
+  return one.num === two.num;
+};
 
 /*::
 export type Board<T> = Array<Array<?T>>;
@@ -67,9 +65,9 @@ function shiftLeft(row) {
 
 function reduceLeft(row, offset) {
   for(let i = offset; i < row.length - 1; i++) {
-    if (row[i] && row[i].canReduce(row[i + 1])) {
+    if (canReduce(row[i], row[i + 1])) {
       const old = row[i + 1] || { id: "0", num: 0 };
-      row[i] = new GameTile(old.num * 2, old.id);
+      row[i] = { id: old.id, num: old.num * 2 };
       row[i + 1] = null;
     }
   }

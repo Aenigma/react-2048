@@ -1,7 +1,7 @@
 import { isEqual } from 'lodash';
 import Random from './randservice';
 import { move, preprocMap } from './BoardMovements';
-import { GameTile, cloneTable, annotateFlatten } from './gamelogic';
+import { gameTileFactory, cloneTable, annotateFlatten } from './gamelogic';
 
 // remove!
 import { moveLeft, moveRight, moveDown, moveUp } from './BoardMovements';
@@ -22,7 +22,7 @@ const addRandom = (rand, board) => {
 
   const emptyCell = filtered[emptyCellIndex];
   const digit = newGridValues[digitIndex];
-  newBoard[emptyCell.row][emptyCell.col] = new GameTile(digit);
+  newBoard[emptyCell.row][emptyCell.col] = gameTileFactory(digit);
 
   return newBoard;
 };
@@ -36,7 +36,7 @@ const isFull = (board) => {
 
 const initialGameState = () => ({
   board: Array(4).fill(Array(4).fill(null)),
-  rand:  new Random(),
+  seed:  new Random().seed,
   playstate: PLAYSTATE_PLAYING,
   hasWon: false,
 });
@@ -49,24 +49,25 @@ const canMove = (board) => {
 };
 
 const newGame = () => {
-  let { board, rand, ...other } = initialGameState();
+  let { board, seed, ...other } = initialGameState();
+  let rand = new Random(seed);
   board = addRandom(rand, board);
   rand = rand.next();
+  seed = rand.seed;
   return {
     board,
-    rand,
+    seed,
     ...other
   }
 };
 
 const game = (state = initialGameState(), action = {type: ""}) => {
-  console.log(action);
   const direction = action.direction ? action.direction.toLowerCase() : 'LEFT';
-  let {rand, board, playstate} = state;
+  let {seed, board, playstate} = state;
+  let rand = new Random(seed);
 
   switch (action.type) {
     case 'MOVE':
-      console.log(`MOVEMENT MADE: ${action.type}_${action.direction}`);
       board = move(board, preprocMap[direction]);
 
       if(isEqual(board, state.board)) {
@@ -77,6 +78,7 @@ const game = (state = initialGameState(), action = {type: ""}) => {
       if(!isFull(board)) {
         board = addRandom(rand, board);
         rand = rand.next();
+        seed = rand.seed;
       }
 
       if(!canMove(board)) {
@@ -84,12 +86,11 @@ const game = (state = initialGameState(), action = {type: ""}) => {
       }
       break;
       case 'NEW_GAME':
-        console.log("NEW GAME")
         return newGame();
       default:
     }
 
-    return { board, rand, playstate };
+    return { board, seed, playstate };
 };
 
 export { game };

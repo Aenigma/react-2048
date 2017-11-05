@@ -1,8 +1,21 @@
 import { Random as LCG } from 'lcg';
 
+const computeSeed = () => Math.random() * Math.pow(2, 32);
+
 class Random {
-  constructor(rand = new LCG(Math.random() * (1 << 32))) {
-    this.rand = rand;
+  constructor(seed) {
+    this.rand = new LCG(computeSeed());
+    if(typeof seed !== 'undefined') {
+      this.rand._value = seed;
+    }
+  }
+
+  set seed(seed) {
+    this.rand._value = seed;
+  }
+
+  get seed() {
+    return this.rand._value;
   }
 
   get(min = 0, max = 100) {
@@ -13,13 +26,11 @@ class Random {
 
   next() {
     const next = this.rand.next();
+    const res = new Random();
+    res.rand = next;
 
-    return new Random(next);
+    return res;
   }
 }
-
-export function seedFactory(seed = 0) {
-  return new Random(new LCG(seed));
-};
 
 export default Random;
