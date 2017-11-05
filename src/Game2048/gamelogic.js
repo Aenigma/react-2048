@@ -43,10 +43,6 @@ export function annotateFlatten(table/*:Array<Array<?GameTile>>*/) {
   return [].concat.apply([], copiedBoard);
 }
 
-export function displayTiles(grid/*: Board2048*/)/*: Board<number>*/{
-  return grid.map(row => row.map(e => e ? e.num : 0));
-}
-
 export function moveGridLeft(table: Array<Array<any>>) {
   return table.map(moveRowLeft);
 }
@@ -63,8 +59,8 @@ function shiftLeft(row) {
   }
 }
 
-function reduceLeft(row, offset) {
-  for(let i = offset; i < row.length - 1; i++) {
+function reduceLeft(row) {
+  for(let i = 0; i < row.length - 1; i++) {
     if (canReduce(row[i], row[i + 1])) {
       const old = row[i + 1] || { id: "0", num: 0 };
       row[i] = { id: old.id, num: old.num * 2 };
@@ -77,9 +73,7 @@ function moveRowLeft(row) {
   const res = row.slice();
 
   shiftLeft(res);
-  for (let i = 0; i < res.length; i++) {
-    reduceLeft(res, i);
-  }
+  reduceLeft(res);
   shiftLeft(res);
   return res;
 }
