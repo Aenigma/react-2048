@@ -52,7 +52,6 @@ const newGame = () => {
   let { board, rand, ...other } = initialGameState();
   board = addRandom(rand, board);
   rand = rand.next();
-  console.trace();
   return {
     board,
     rand,

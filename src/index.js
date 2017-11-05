@@ -1,16 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import registerServiceWorker from './registerServiceWorker';
 import { createStore } from 'redux';
-import { Provider, connect } from 'react-redux';
-import Game from './Game2048';
-import { game } from './Game2048/reducers';
 import undoable, { ActionCreators } from 'redux-undo';
+import { Provider, connect } from 'react-redux';
 
-import GamePresentationWrapper from './Game2048/PresentationWrapper';
-import GamePresentation from './Game2048/GamePresentation';
+import registerServiceWorker from './registerServiceWorker';
+import App from './App';
+
+import Game2048 from './Game2048';
+import { game } from './Game2048/reducers';
+
+import './index.css';
+
 
 const store = createStore(undoable(game));
 
@@ -31,7 +32,7 @@ const mapStateToProps = (state) => {
     canRedo: state.future.length > 0
   };
 };
-const GameRedux = connect(mapStateToProps, mapDispatchMover)(Game);
+const GameRedux = connect(mapStateToProps, mapDispatchMover)(Game2048);
 
 const createNewGame = () => {
   store.dispatch({type: 'NEW_GAME'});
@@ -47,20 +48,13 @@ let GameActions = ({canUndo, canRedo}) => (
 );
 GameActions = connect(mapStateToProps, null)(GameActions);
 
-const EMPTYBOARD = Array(4).fill(Array(4).fill(null));
 ReactDOM.render((
   <div>
-    <App heading="2048">
-    </App>
+    <App heading="2048"/>
     <Provider store={store}>
       <div>
         <GameActions />
-        <div className="center">
-          <GamePresentationWrapper visible={false} board={EMPTYBOARD}>
-            <GamePresentation board={EMPTYBOARD} tabIndex={"-1"} shouldAutoFocus={false}/>
-          </GamePresentationWrapper>
-          <GameRedux />
-        </div>
+        <GameRedux />
       </div>
     </Provider>
   </div>
