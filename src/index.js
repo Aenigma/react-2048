@@ -15,13 +15,21 @@ import './index.css';
 
 const store = createStore(undoable(game));
 
+const createNewGame = () => {
+  store.dispatch({type: 'NEW_GAME'});
+  store.dispatch(ActionCreators.clearHistory());
+};
+
 const moveAction = (direction) => ({
   type: 'MOVE',
   direction
 });
 
 const mapDispatchMover = dispatch => ({
-  move: direction => dispatch(moveAction(direction))
+  move: direction => dispatch(moveAction(direction)),
+  undo: () => store.dispatch(ActionCreators.undo()),
+  redo: () => store.dispatch(ActionCreators.redo()),
+  newgame: () => createNewGame(),
 });
 
 const mapStateToProps = (state) => {
@@ -33,11 +41,6 @@ const mapStateToProps = (state) => {
   };
 };
 const GameRedux = connect(mapStateToProps, mapDispatchMover)(Game2048);
-
-const createNewGame = () => {
-  store.dispatch({type: 'NEW_GAME'});
-  store.dispatch(ActionCreators.clearHistory());
-};
 
 let GameActions = ({canUndo, canRedo}) => (
   <div className="center">

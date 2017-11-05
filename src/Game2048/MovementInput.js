@@ -24,12 +24,15 @@ const ArrowKeysMovement = ({children, move, ...passThrough}) => {
   return React.cloneElement(React.Children.only(children), {...props, ...passThrough});
 };
 
-const MovementInput = ({children, move}) => (
+const MovementInput = ({children, move, undo, redo, newgame}) => (
   <Gamepad
     onLeft={() => move('LEFT')}
     onRight={() => move('RIGHT')}
     onDown={() => move('DOWN')}
-    onUp={() => move('UP')}>
+    onUp={() => move('UP')}
+    onLB={undo}
+    onRB={redo}
+    onStart={newgame}>
     <Swipeable config={swipe}
       onSwipeLeft={() => move('LEFT')}
       onSwipeRight={() => move('RIGHT')}
