@@ -5,7 +5,7 @@
   "homepage": "https://aenigma.github.io/react-2048/",
   "dependencies": {
     "flow-bin": "^0.57.3",
-    "lcg": "^0.1.4",
+    "lcg": "Aenigma/node-lcg#53a1364",
     "lodash": "^4.17.4",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
