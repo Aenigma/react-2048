@@ -1,26 +1,29 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
 import logo from './logo.svg';
 import './App.css';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">{this.props.heading}</h1>
-        </header>
-        <p className="App-intro">
-          {this.props.children}
-        </p>
-      </div>
-    );
-  }
-}
+const AppLogo = (
+  <img src={logo} className="App-logo" alt="logo" />
+);
 
-App.propTypes = {
-  heading: PropTypes.string.isRequired
+const GithubLink = (
+  <IconButton iconClassName="fa fa-github" />
+);
+
+const appStyle = {
+  backgroundColor: '#222'
 };
+
+const App = ({heading}) => (
+  <AppBar title={heading}
+    style={appStyle}
+    showMenuIconButton={true}
+    iconElementLeft={AppLogo}
+    iconElementRight={GithubLink}
+    //iconClassNameRight="fa fa-github"
+  />
+);
 
 export default App;

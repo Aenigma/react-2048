@@ -8,7 +8,10 @@ import registerServiceWorker from './registerServiceWorker';
 import App from './App';
 import { loadState, saveState } from './Game2048/localstorage';
 
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 import Game2048 from './Game2048';
+import GameActions from './Game2048/GameActions';
 import { game } from './Game2048/reducers';
 
 import './index.css';
@@ -51,25 +54,18 @@ const mapStateToProps = (state) => {
 };
 const GameRedux = connect(mapStateToProps, mapDispatchMover)(Game2048);
 
-let GameActions = ({canUndo, canRedo, newgame, undo, redo}) => (
-  <div className="center">
-    <button onClick={newgame}>New Game!</button>
-    <button onClick={undo} disabled={!canUndo}>Undo</button>
-    <button onClick={redo} disabled={!canRedo}>Redo</button>
-  </div>
-);
-GameActions = connect(mapStateToProps, mapDispatchMover)(GameActions);
+const GameActionsRedux = connect(mapStateToProps, mapDispatchMover)(GameActions);
 
 ReactDOM.render((
-  <div>
-    <App heading="2048"/>
-    <Provider store={store}>
+  <Provider store={store}>
+    <MuiThemeProvider >
       <div>
-        <GameActions />
+        <App heading="React 2048"/>
+        <GameActionsRedux />
         <GameRedux />
       </div>
-    </Provider>
-  </div>
+    </MuiThemeProvider>
+  </Provider>
 ), document.getElementById('root'));
 //createNewGame();
 registerServiceWorker();

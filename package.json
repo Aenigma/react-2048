@@ -2,11 +2,16 @@
   "name": "react2048",
   "version": "0.1.0",
   "private": true,
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/Aenigma/react-2048"
+  },
   "homepage": "https://aenigma.github.io/react-2048/",
   "dependencies": {
     "flow-bin": "^0.57.3",
     "lcg": "Aenigma/node-lcg#53a1364",
     "lodash": "^4.17.4",
+    "material-ui": "^0.19.4",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-flip-move": "^2.9.17",
