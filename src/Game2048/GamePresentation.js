@@ -42,7 +42,7 @@ class GamePresentation extends Component {
 
     return (
       <FlipMove {...other} className="Game" tabIndex={tabIndex}
-        duration={100} easing="linear" enterAnimation="none" leaveAnimation="none">
+        duration={125} easing="ease" leaveAnimation="none">
         {annotateFlatten(board).map(genItem)}
       </FlipMove>);
   }
