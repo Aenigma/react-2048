@@ -34,22 +34,11 @@
 
 @media (max-width: 399px) {
   .Game {
-    grid-template-columns: repeat(4, 50px);
-    grid-template-rows: repeat(4, 50px);
+    grid-template-columns: repeat(4, 20vw);
+    grid-template-rows: repeat(4, 20vw);
   }
 
   .Game-item {
-    font-size: 1em;
-  }
-}
-
-@media (max-width: 199px) {
-  .Game {
-    grid-template-columns: repeat(4, 25px);
-    grid-template-rows: repeat(4, 25px);
-  }
-
-  .Game-item {
-    font-size: 8px;
+    font-size: 6vw;
   }
 }
