@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore } from 'redux';
-import undoable, { ActionCreators } from 'redux-undo';
+import undoable, { ActionCreators, excludeAction } from 'redux-undo';
 import { Provider, connect } from 'react-redux';
 
 import registerServiceWorker from './registerServiceWorker';
@@ -12,13 +12,41 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Game2048 from './Game2048';
 import GameActions from './Game2048/GameActions';
+import GameMessages from './Game2048/GameMessages';
 import { game } from './Game2048/reducers';
 
 import './index.css';
 
+const ugame = undoable(game, {
+  filter: excludeAction('@@INIT')
+});
+
+const initialAppState = {
+  game: ugame(undefined),
+  message: '',
+};
+
+const messageMachine = (prev, next, action="") => {
+  if(next === 'PLAYSTATE_LOSS') {
+    return 'LOSS';
+  } else if (prev === 'PLAYSTATE_PLAYING' && next === 'PLAYSTATE_VICTORY') {
+    return 'VICTORY'
+  } else if (action === "@@INIT") {
+    return 'TIP';
+  } else {
+    return '';
+  }
+};
+
+const message = (state = initialAppState, action = {type: ""}) => {
+  const game = ugame(state.game, action);
+  const message = messageMachine(state.game.present.playstate, game.present.playstate, action.type);
+
+  return { game, message };
+};
 
 const store = createStore(
-  undoable(game),
+  message,
   loadState(),
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
@@ -45,15 +73,23 @@ const mapDispatchMover = dispatch => ({
 });
 
 const mapStateToProps = (state) => {
-  const { board } = state.present;
+  const { board } = state.game.present;
   return {
     board,
-    canUndo: state.past.length > 0,
-    canRedo: state.future.length > 0
+    canUndo: state.game.past.length > 0,
+    canRedo: state.game.future.length > 0
   };
 };
 const GameRedux = connect(mapStateToProps, mapDispatchMover)(Game2048);
+const GameMessagesRedux = connect((state) => {
+  const { message } = state;
 
+  return {
+    showVictory: message === 'VICTORY',
+    showLoss: message === 'LOSS',
+    showTip: message === 'TIP',
+  };
+}, undefined)(GameMessages);
 const GameActionsRedux = connect(mapStateToProps, mapDispatchMover)(GameActions);
 
 ReactDOM.render((
@@ -63,6 +99,7 @@ ReactDOM.render((
         <App heading="React 2048"/>
         <GameActionsRedux />
         <GameRedux />
+        <GameMessagesRedux/>
       </div>
     </MuiThemeProvider>
   </Provider>

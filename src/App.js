@@ -9,7 +9,7 @@ const AppLogo = (
 );
 
 const GithubLink = (
-  <IconButton iconClassName="fa fa-github" />
+  <IconButton iconClassName="fa fa-github" href="https://github.com/Aenigma/react-2048"/>
 );
 
 const appStyle = {
@@ -22,7 +22,6 @@ const App = ({heading}) => (
     showMenuIconButton={true}
     iconElementLeft={AppLogo}
     iconElementRight={GithubLink}
-    //iconClassNameRight="fa fa-github"
   />
 );
 
