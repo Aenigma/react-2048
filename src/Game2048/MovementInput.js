@@ -1,8 +1,7 @@
 import React from 'react';
-import { Swipeable, defineSwipe } from 'react-touch';
+import Swipeable from 'react-swipeable'
 import Gamepad from 'react-gamepad';
 
-const swipe = defineSwipe({swipeDistance: 30});
 const keyMove = (key, move) => {
   const keyMap = {
     'ArrowUp': 'UP',
@@ -33,11 +32,11 @@ const MovementInput = ({children, move, undo, redo, newgame}) => (
     onLB={undo}
     onRB={redo}
     onStart={newgame}>
-    <Swipeable config={swipe}
-      onSwipeLeft={() => move('LEFT')}
-      onSwipeRight={() => move('RIGHT')}
-      onSwipeDown={() => move('DOWN')}
-      onSwipeUp={() => move('UP')}>
+    <Swipeable
+      onSwipedLeft={() => move('LEFT')}
+      onSwipedRight={() => move('RIGHT')}
+      onSwipedDown={() => move('DOWN')}
+      onSwipedUp={() => move('UP')}>
       <ArrowKeysMovement move={move}>
         {children}
       </ArrowKeysMovement>

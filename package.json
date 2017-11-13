@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/Aenigma/react-2048"
+    "type": "git",
+    "url": "https://github.com/Aenigma/react-2048"
   },
   "homepage": "https://aenigma.github.io/react-2048/",
   "dependencies": {
@@ -18,7 +18,7 @@
     "react-gamepad": "^1.0.3",
     "react-redux": "^5.0.6",
     "react-scripts": "1.0.14",
-    "react-touch": "^0.4.3",
+    "react-swipeable": "^4.2.0",
     "redux": "^3.7.2",
     "redux-undo": "^1.0.0-beta9-9-6",
     "uuid": "^3.1.0"
