@@ -1,13 +1,64 @@
 import React from 'react';
 import IconButton from 'material-ui/IconButton';
 import { ContentAddCircleOutline, ContentUndo, ContentRedo } from 'material-ui/svg-icons';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import CloseableContainer from '../Utils/CloseableContainer';
+
+class NewGame extends React.Component {
+  constructor({newgame}) {
+    super();
+    this.state = { promptOpen: false };
+
+    this.openPrompt = this.openPrompt.bind(this);
+    this.closePrompt = this.closePrompt.bind(this);
+
+    const newgameBtn = () => {
+      this.setState({promptOpen: false});
+      newgame();
+    };
+
+    this.actions = [
+      <FlatButton
+        label="Cancel"
+        primary={true}
+        onClick={this.closePrompt}
+      />,
+      <FlatButton
+        label="New Game"
+        primary={true}
+        onClick={newgameBtn}
+      />,
+    ];
+  }
+
+  openPrompt() {
+    this.setState({promptOpen: true});
+  }
+
+  closePrompt() {
+    this.setState({promptOpen: false});
+  }
+
+  render() {
+    const { promptOpen } = this.state;
+    return (
+      <IconButton tooltip="New Game" onClick={this.openPrompt} touch={true} tooltipPosition="bottom-center">
+        <ContentAddCircleOutline />
+        <CloseableContainer open={promptOpen}>
+          <Dialog title="New Game" open={promptOpen} actions={this.actions}>
+            Do you want to start a new game? This action cannot be undone!
+          </Dialog>
+        </CloseableContainer>
+      </IconButton>
+    );
+  }
+}
 
 
 const GameActions = ({canUndo, canRedo, newgame, undo, redo}) => (
   <div className="center vcenter">
-    <IconButton tooltip="New Game" onClick={newgame} touch={true} tooltipPosition="bottom-center">
-      <ContentAddCircleOutline />
-    </IconButton>
+    <NewGame newgame={newgame}/>
     <IconButton tooltip={canUndo && "Undo"} onClick={undo} disabled={!canUndo} touch={true} tooltipPosition="bottom-center">
       <ContentUndo />
     </IconButton>

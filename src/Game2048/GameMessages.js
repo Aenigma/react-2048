@@ -1,32 +1,9 @@
-import React, { Component, cloneElement, Children } from 'react';
+import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import Snackbar from 'material-ui/Snackbar';
 
-class CloseableContainer extends Component {
-  constructor({open = false}) {
-    super();
-    this.state = { open };
-    this.close = this.close.bind(this);
-  }
+import CloseableContainer from '../Utils/CloseableContainer';
 
-  componentWillReceiveProps({open}) {
-    if(open !== this.state.open) {
-      this.setState({open});
-    }
-  }
-
-  close() {
-    this.setState({open: false});
-  }
-
-  render() {
-    const { children } = this.props;
-    const { open } = this.state;
-    const onRequestClose = this.close;
-
-    return cloneElement(Children.only(children), { open, onRequestClose });
-  }
-}
 const tips = [
   "You can use a gamepad to play! Connect one and try it out!",
   "Try to get the highest value into the corner!",
