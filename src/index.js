@@ -11,7 +11,7 @@ import { loadState, saveState } from './Game2048/localstorage';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Game2048 from './Game2048';
-import GameActions from './Game2048/GameActions';
+import GameActions, { makeGameActionList } from './Game2048/GameActions';
 import GameMessages from './Game2048/GameMessages';
 import { game } from './Game2048/reducers';
 
@@ -92,13 +92,15 @@ const GameMessagesRedux = connect((state) => {
 }, undefined)(GameMessages);
 const GameActionsRedux = connect(mapStateToProps, mapDispatchMover)(GameActions);
 
+const makeGameActionListRedux = connect(mapStateToProps, mapDispatchMover)(makeGameActionList);
+
 ReactDOM.render((
   <Provider store={store}>
     <MuiThemeProvider >
       <div>
         <App heading="React 2048"/>
         <GameActionsRedux />
-        <GameRedux />
+        <GameRedux actions={makeGameActionListRedux()}/>
         <GameMessagesRedux/>
       </div>
     </MuiThemeProvider>

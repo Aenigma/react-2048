@@ -4,6 +4,7 @@ import { ContentAddCircleOutline, ContentUndo, ContentRedo } from 'material-ui/s
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import CloseableContainer from '../Utils/CloseableContainer';
+import { createComponentList } from '../Utils/component-list';
 
 class NewGame extends React.Component {
   constructor({newgame}) {
@@ -55,16 +56,19 @@ class NewGame extends React.Component {
   }
 }
 
+export const makeGameActionList = ({canUndo, canRedo, newgame, undo, redo}) => createComponentList([
+  <NewGame newgame={newgame}/>,
+  <IconButton tooltip={canUndo && "Undo"} onClick={undo} disabled={!canUndo} touch={true} tooltipPosition="bottom-center">
+    <ContentUndo />
+  </IconButton>,
+  <IconButton tooltip={canRedo &&"Redo"} onClick={redo} disabled={!canRedo} touch={true} tooltipPosition="bottom-center">
+    <ContentRedo />
+  </IconButton>,
+], 'gaal');
 
-const GameActions = ({canUndo, canRedo, newgame, undo, redo}) => (
+const GameActions = (props) => (
   <div className="center vcenter">
-    <NewGame newgame={newgame}/>
-    <IconButton tooltip={canUndo && "Undo"} onClick={undo} disabled={!canUndo} touch={true} tooltipPosition="bottom-center">
-      <ContentUndo />
-    </IconButton>
-    <IconButton tooltip={canRedo &&"Redo"} onClick={redo} disabled={!canRedo} touch={true} tooltipPosition="bottom-center">
-      <ContentRedo />
-    </IconButton>
+    {makeGameActionList(props)}
   </div>
 );
 
