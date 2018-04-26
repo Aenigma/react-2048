@@ -1,0 +1,16 @@
+{
+  "short_name": "React 2048",
+  "name": "React 2048",
+  "icons": [
+    {
+      "src": "2048.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "scope": "./",
+  "start_url": "./",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
